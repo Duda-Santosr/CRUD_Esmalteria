@@ -75,7 +75,7 @@ body {
   border-radius: 20px;
   max-width: 1000px;
   width: 100%;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(255, 99, 162, 0.56);
   animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -86,12 +86,15 @@ body {
   font-weight: 700;
   text-align: center;
 }
+h3{
+    color: #d6336c;
+}
 
 /* ====== BOTÃO ====== */
 .btn {
       display: inline-block;
       padding: 12px 20px;
-      background: #d6336c;
+      background: linear-gradient(135deg, #d6336c, #f0569bff);
       color: #fff;
       text-decoration: none;
       font-size: 16px;
@@ -102,7 +105,7 @@ body {
     }
 
     .btn:hover {
-      background: #b81e53;
+      background: linear-gradient(135deg, #b81e53, #fc4999ff);
       transform: scale(1.05);
       box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
     }
@@ -112,7 +115,6 @@ body {
       display: flex;
       justify-content: center;
       margin: 15px 0;
-      align-items: center;
     }
 
 /* ====== FORM ====== */
@@ -232,7 +234,7 @@ td.saida {
         
         <a href="index.php" class="btn">Voltar</a>
 
-        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin: 15px 0;">
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin: 15px 0; border-radius: 8px;">
             <h3>Nova Movimentação</h3>
             <form method="post">
                 <div class="form-row">

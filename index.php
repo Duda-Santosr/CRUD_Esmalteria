@@ -48,7 +48,7 @@ body {
  border-radius: 20px;
  width: 100%;
  max-width: 950px;
- box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+ box-shadow: 0 6px 20px rgba(255, 99, 162, 0.56);
  animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -148,7 +148,7 @@ body {
 
 .btn {
  padding: 10px 20px;
- background: linear-gradient(135deg, #f06292, #f0569bff);
+ background: linear-gradient(135deg, #d6336c, #f0569bff);
  color: #fff;
  border-radius: 10px;
  text-decoration: none;
@@ -158,9 +158,9 @@ body {
 }
 
 .btn:hover {
- background: linear-gradient(135deg, #ec407a, #ff0055ff);
+ background: linear-gradient(135deg, #b81e53, #fc4999ff);
  transform: scale(1.05);
- box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+ box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
 }
 
 @keyframes fadeIn {
