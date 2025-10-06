@@ -159,7 +159,7 @@ form textarea {
   border-radius: 12px;
   border: 2px solid #f8c8dc;
   font-size: 14px;
-  flex: 1 1 px;
+  flex: 1 1 10px;
   min-width: 200px;
   transition: 0.3s ease;
   max-width: 10%;
