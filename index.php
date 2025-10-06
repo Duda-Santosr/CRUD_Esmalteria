@@ -1,3 +1,4 @@
+
 <?php
 // Começar a sessão
 session_start();
@@ -22,9 +23,8 @@ $alerta_estoque = gerarAlertaEstoque($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Studio D.I.Y</title>
-
     <style>
-/* ======== RESET E BASE ======== */
+    /* ====== RESET ====== */
 * {
   margin: 0;
   padding: 0;
@@ -32,199 +32,160 @@ $alerta_estoque = gerarAlertaEstoque($conn);
   font-family: 'Poppins', sans-serif;
 }
 
+/* ====== BODY ====== */
 body {
-  background: linear-gradient(135deg, #ffe6f0, #fff0f6);
-  color: #333;
-  min-height: 100vh;
+  background: linear-gradient(135deg, #f9d5e5, #fcd5ce, #f8c8dc);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: 30px 15px;
+  min-height: 100vh;
+  padding: 30px;
 }
 
-/* ======== CONTAINER ======== */
+/* ====== CONTAINER ====== */
 .container {
   background: #fff;
-  width: 100%;
-  max-width: 900px;
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(214, 51, 108, 0.25);
-  padding: 40px 30px;
+  border-radius: 25px;
+  padding: 40px 60px;
+  width: 800px;
+  max-width: 95%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.8s ease-in-out;
+  text-align: center;
 }
 
-/* ======== TÍTULO E BOAS-VINDAS ======== */
-h1 {
-  text-align: center;
+/* ====== TÍTULO ====== */
+.container h1 {
+  font-size: 30px;
   color: #d6336c;
-  font-size: 2rem;
-  margin-bottom: 15px;
   font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
 }
 
+/* ====== BOAS-VINDAS ====== */
 .welcome {
-  text-align: center;
-  font-size: 1.1em;
-  color: #555;
+  font-size: 18px;
+  color: #444;
   margin-bottom: 25px;
+  font-weight: 500;
 }
 
-/* ======== ALERTA DE ESTOQUE ======== */
+/* ====== ALERTA DE ESTOQUE ====== */
 .alert {
   background-color: #fff0f6;
-  border: 2px solid #ff80ab;
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 30px;
-  animation: pulse 1.5s infinite alternate;
+  border-left: 6px solid #d6336c;
+  padding: 15px 20px;
+  border-radius: 12px;
+  text-align: left;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 10px rgba(214, 51, 108, 0.1);
 }
 
 .alert h3 {
-  color: #d6336c;
-  margin-top: 0;
+  color: #c2185b;
   margin-bottom: 10px;
-  font-size: 1.2rem;
 }
 
 .alert ul {
-  padding-left: 25px;
-  margin-bottom: 10px;
+  margin-left: 20px;
+  color: #444;
+  font-size: 15px;
 }
 
 .alert a {
   display: inline-block;
-  background: linear-gradient(135deg, #d6336c, #f0569b);
-  color: #fff;
+  margin-top: 10px;
+  color: #d6336c;
+  font-weight: 600;
   text-decoration: none;
-  padding: 10px 18px;
-  border-radius: 10px;
   transition: 0.3s;
-  font-weight: 500;
 }
 
 .alert a:hover {
-  background: linear-gradient(135deg, #b81e53, #fc4999);
-  transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
+  color: #b81e53;
 }
 
-/* ======== MENU ======== */
+/* ====== MENU GRID ====== */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 25px;
+  margin-top: 30px;
 }
 
 .menu-item {
-  background-color: #ffe6f0;
-  border: 2px solid #f9bcd0;
+  background-color: #fff5f9;
   border-radius: 15px;
-  padding: 25px 15px;
-  text-align: center;
+  padding: 25px;
   text-decoration: none;
   color: #333;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
 
 .menu-item:hover {
-  background-color: #ffd1e0;
+  background-color: #ffd6e8;
   transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(214, 51, 108, 0.25);
+  box-shadow: 0 5px 12px rgba(214, 51, 108, 0.25);
 }
 
 .menu-item h3 {
   color: #d6336c;
   margin-bottom: 10px;
-  font-size: 1.2rem;
+  font-size: 20px;
 }
 
 .menu-item p {
+  font-size: 14px;
   color: #555;
-  font-size: 0.95em;
 }
 
-/* ======== BOTÃO SAIR ======== */
+/* ====== BOTÃO SAIR ====== */
 .btn {
-  background: linear-gradient(135deg, #d6336c, #f0569b);
-  color: #fff;
-  text-decoration: none;
-  padding: 12px 25px;
-  border-radius: 25px;
-  font-weight: 600;
   display: inline-block;
+  margin-top: 30px;
+  background: #d6336c;
+  color: #fff;
+  padding: 12px 45px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: bold;
   transition: 0.3s;
-  text-align: center;
 }
 
 .btn:hover {
-  background: linear-gradient(135deg, #b81e53, #fc4999);
+  background: #b81e53;
   transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
 }
 
-/* Centralização do botão */
-.container > div:last-child {
-  text-align: center;
-  margin-top: 35px;
-}
-
-/* ======== ANIMAÇÕES ======== */
+/* ====== ANIMAÇÃO ====== */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse {
-  from {
-    box-shadow: 0 0 5px rgba(214, 51, 108, 0.2);
-  }
-  to {
-    box-shadow: 0 0 20px rgba(214, 51, 108, 0.4);
-  }
-}
-
-/* ======== RESPONSIVIDADE ======== */
+/* ====== RESPONSIVIDADE ====== */
 @media (max-width: 768px) {
   .container {
     padding: 25px 20px;
   }
 
-  h1 {
-    font-size: 1.6rem;
-  }
-
-  .menu-item {
-    padding: 18px;
-  }
-
-  .btn {
-    width: 100%;
-    border-radius: 15px;
-  }
-}
-
-@media (max-width: 480px) {
   .menu-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
 
-  .alert {
-    padding: 15px;
+  .menu-item h3 {
+    font-size: 18px;
   }
 
-  .alert a {
-    width: 100%;
-    text-align: center;
+  .container h1 {
+    font-size: 24px;
   }
 }
-
-    </style>
+</style>
 </head>
 <body>
     <div class="container">
@@ -259,7 +220,7 @@ h1 {
                 <p>Ver movimentações</p>
             </a>
         </div>
-        <div style="text-align: center; margin-top: 30px;">
+        <div style="text-align: center; margin-top: 20px;">
             <a href="logout.php" class="btn">Sair</a>
         </div>
     </div>

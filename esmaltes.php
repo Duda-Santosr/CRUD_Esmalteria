@@ -1,3 +1,4 @@
+
 <?php
 // Começar a sessão
 session_start();
@@ -116,16 +117,15 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 30px 15px;
+  padding: 40px 15px;
   color: #444;
-  overflow-x: hidden;
 }
 
-/* ======== CONTAINER ======== */
+/* ======== CONTAINER PRINCIPAL ======== */
 .container {
   background: #fff;
-  padding: 40px 30px;
-  border-radius: 20px;
+  padding: 45px 35px;
+  border-radius: 25px;
   width: 100%;
   max-width: 1100px;
   box-shadow: 0 8px 25px rgba(214, 51, 108, 0.25);
@@ -133,65 +133,67 @@ body {
   overflow: hidden;
 }
 
-/* ======== TÍTULO ======== */
+/* ======== CABEÇALHO / TÍTULO ======== */
 .container h1 {
   text-align: center;
   margin-bottom: 30px;
   color: #d6336c;
   font-weight: 700;
   letter-spacing: 1px;
-  font-size: 2rem;
+  font-size: 2.2rem;
 }
 
-/* ======== FORMULÁRIOS ======== */
-form {
+/* ======== FORM DE BUSCA ======== */
+.busca {
+  background: #fff5f9;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  border: 1px solid #ff006aff;
+  box-shadow: 0 3px 10px rgba(214, 51, 108, 0.1);
+}
+
+.busca form {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
   justify-content: center;
-  align-items: flex-start;
+
 }
 
-form input,
-form select,
-form textarea {
+.busca input {
+  flex: 1;
+  min-width: 200px;
   padding: 10px;
   border-radius: 12px;
   border: 2px solid #f8c8dc;
   font-size: 14px;
-  flex: 1 1 10px;
-  min-width: 200px;
-  transition: 0.3s ease;
-  max-width: 10%;
+  transition: 0.3s;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+.busca input:focus {
   border-color: #d6336c;
   box-shadow: 0 0 8px rgba(214, 51, 108, 0.4);
-  outline: none;
 }
 
 /* ======== BOTÕES ======== */
-form button,
-.btn {
-  padding: 12px 24px;
+.btn,
+form button {
   background: linear-gradient(135deg, #d6336c, #f0569b);
   color: #fff;
   border: none;
   border-radius: 12px;
+  padding: 12px 25px;
   font-weight: bold;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
   text-align: center;
-  min-width: 150px;
-  max-width: 100%;
 }
 
-form button:hover,
-.btn:hover {
+.btn:hover,
+form button:hover {
   background: linear-gradient(135deg, #b81e53, #fc4999);
   transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
@@ -221,8 +223,8 @@ form button:hover,
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  border-radius: 12px;
+  margin-top: 15px;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
@@ -233,24 +235,26 @@ table th {
   padding: 12px;
   text-align: left;
   font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 table td {
   padding: 10px;
-  border-bottom: 1px solid #f1b6c9;
+  border-bottom: 1px solid #f3b7c7;
   font-size: 14px;
-  vertical-align: middle;
 }
 
 table tr:nth-child(even) {
-  background: #fdf0f5;
+  background: #fff5f9;
 }
 
 table tr:hover {
-  background: #f8c8dc;
+  background: #ffe6ef;
+  transition: 0.2s;
 }
 
-/* ======== ESTOQUE ======== */
+/* ======== STATUS DE ESTOQUE ======== */
 .estoque-ok {
   background: #f1f8e9;
 }
@@ -275,27 +279,60 @@ table tr:hover {
   background: #e53935;
 }
 
-/* ======== FORM DE CADASTRO ======== */
+/* ======== FORMULÁRIO DE CADASTRO ======== */
+.form-cadastro {
+  background: #fff5f9;
+  padding: 20px;
+  border: 1px solid #f8c8dc;
+  border-radius: 15px;
+  margin-top: 25px;
+  box-shadow: 0 3px 10px rgba(214, 51, 108, 0.1);
+}
+
+.form-cadastro h3 {
+  color: #d6336c;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
   justify-content: space-between;
   margin-bottom: 15px;
-  width: 100%;
 }
 
 .form-group {
   flex: 1 1 250px;
   display: flex;
   flex-direction: column;
-  max-width: 100%;
 }
 
 .form-group label {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   font-weight: 600;
   color: #555;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid #f8c8dc;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #d6336c;
+  box-shadow: 0 0 8px rgba(214, 51, 108, 0.4);
+  outline: none;
 }
 
 textarea {
@@ -303,16 +340,10 @@ textarea {
   min-height: 60px;
 }
 
-/* ======== ANIMAÇÕES ======== */
+/* ======== ANIMAÇÃO ======== */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ======== RESPONSIVIDADE ======== */
@@ -322,20 +353,13 @@ textarea {
   }
 
   .container h1 {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
 
-  table {
-    font-size: 13px;
-  }
-
-  form {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
+  form,
   .form-row {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .btn,
@@ -343,9 +367,12 @@ textarea {
     width: 100%;
   }
 
+  table {
+    font-size: 13px;
+  }
+
   table td,
   table th {
-    font-size: 13px;
     padding: 8px;
   }
 }
@@ -360,9 +387,9 @@ textarea {
     font-size: 0.9em;
   }
 
-  form input,
-  form select,
-  form textarea {
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     font-size: 13px;
   }
 }
@@ -387,9 +414,9 @@ SESSION: <?php echo htmlspecialchars(print_r($_SESSION, true)); ?></pre>
             <div class="alert error"><?php echo htmlspecialchars($_SESSION['flash_error']); unset($_SESSION['flash_error']); ?></div>
         <?php endif; ?>
 
-        <div style="background: #f9f9f9; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd;">
+        <div style="background: #f9f9f9; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px;">
             <form method="get" style="display: flex; gap: 10px;">
-                <input name="busca" placeholder="Buscar..." value="<?= htmlspecialchars($texto_busca) ?>" style="flex: 1; padding: 8px;">
+                <input name="busca" placeholder="Buscar..." value="<?= htmlspecialchars($texto_busca) ?>" style="flex: 1; padding: 8px; border-radius: 8px;">
                 <button type="submit" class="btn">Buscar</button>
                 <a href="index.php" class="btn">Voltar</a>
             </form>
@@ -426,7 +453,7 @@ SESSION: <?php echo htmlspecialchars(print_r($_SESSION, true)); ?></pre>
                     <td><strong><?= $estoque_atual ?></strong>/<?= $estoque_minimo ?><?= $estoque_baixo ? '<br><small>⚠️ Baixo!</small>' : '' ?></td>
                     <td>
                         <a href="editar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;">Editar</a>
-                        <a href="deletar_esmlte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="return confirm('Excluir?')">Excluir</a>
+                        <a href="deletar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="return confirm('Excluir?')">Excluir</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
@@ -482,4 +509,3 @@ SESSION: <?php echo htmlspecialchars(print_r($_SESSION, true)); ?></pre>
     </div>
 </body>
 </html>
-
