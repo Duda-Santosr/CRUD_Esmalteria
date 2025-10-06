@@ -278,105 +278,116 @@ flex-direction: column;
   </style>
 <body>
   <div class="container">
-    <h1>Gerenciar Catálogo</h1>
+        <h1>Gerenciar Esmaltes</h1>
 
-    <div style="background: #f9f9f9; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px;">
-      <form method="get" style="display: flex; gap: 10px;">
-        <input name="busca" placeholder="Buscar..." value="<?= htmlspecialchars($texto_busca) ?>" style="flex: 1; padding: 8px;">
-        <button type="submit" class="btn">Buscar</button>
-        <a href="index.php" class="btn">Voltar</a>
-      </form>
-    </div>
+        <?php if (!empty($_GET['debug'])): ?>
+            <div class="alert">
+                <strong>DEBUG</strong>
+                <pre style="white-space:pre-wrap;overflow:auto;max-height:200px;">POST: <?php echo htmlspecialchars(print_r($_POST, true)); ?>
+SESSION: <?php echo htmlspecialchars(print_r($_SESSION, true)); ?></pre>
+            </div>
+        <?php endif; ?>
 
-    <table>
-      <tr><th>Nome</th><th>Cores</th><th>Preço</th><th>Categoria</th><th>Marca</th><th>Estoque</th><th>Ações</th></tr>
-      <?php 
-      // Mostrar cada esmalte na tabela
-      while($esmalte = $resultado_esmlates->fetch_assoc()): 
-        $esmalte_id = $esmalte['id'];
-        
-        // Calcular estoque atual desta esmalte
-        $sql_entradas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE esmalte_id = $esmalte_id AND tipo = 'entrada'";
-        $entradas = $conn->query($sql_entradas)->fetch_assoc();
-        $total_entradas = $entradas['total'] ? $entradas['total'] : 0;
-        
-        $sql_saidas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE esmalte_id = $esmalte_id AND tipo = 'saida'";
-        $saidas = $conn->query($sql_saidas)->fetch_assoc();
-        $total_saidas = $saidas['total'] ? $saidas['total'] : 0;
-        
-        $estoque_atual = $total_entradas - $total_saidas;
-        $estoque_minimo = $esmalte['estoque_minimo'];
-        
-        // Verificar se estoque está baixo
-        $estoque_baixo = $estoque_atual <= $estoque_minimo;
-      ?>
-        <tr class="<?= $estoque_baixo ? 'estoque-baixo' : 'estoque-ok' ?>">
-          <td><span class="status-indicator <?= $estoque_baixo ? 'status-baixo' : 'status-ok' ?>"></span><?= htmlspecialchars($esmalte['nome']) ?></td>
-          <td><?= htmlspecialchars($esmalte['cores']) ?></td>
-          <td>R$ <?= number_format($esmalte['preco'], 2, ',', '.') ?></td>
-          <td><?= htmlspecialchars($esmalte['categoria']) ?></td>
-          <td><?= htmlspecialchars($esmalte['marca']) ?></td>
-          <td><strong><?= $estoque_atual ?></strong>/<?= $estoque_minimo ?><?= $estoque_baixo ? '<br><small>⚠️ Baixo!</small>' : '' ?></td>
-          <td>
-            <a href="editar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;">Editar</a>
-            <a href="deletar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="return confirm('Excluir?')">Excluir</a>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </table>
+        <?php if (!empty($_SESSION['flash_success'])): ?>
+            <div class="alert success"><?php echo htmlspecialchars($_SESSION['flash_success']); unset($_SESSION['flash_success']); ?></div>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['flash_error'])): ?>
+            <div class="alert error"><?php echo htmlspecialchars($_SESSION['flash_error']); unset($_SESSION['flash_error']); ?></div>
+        <?php endif; ?>
 
-    <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd;">
-      <h3>Adicionar Esmalte</h3>
-      <form method="post">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nome:</label>
-            <input type="text" name="nome" required>
-          </div>
-          <div class="form-group">
-            <label>Preço:</label>
-            <input type="number" name="preco" step="0.01" required>
-          </div>
+        <div style="background: #f9f9f9; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd;">
+            <form method="get" style="display: flex; gap: 10px;">
+                <input name="busca" placeholder="Buscar..." value="<?= htmlspecialchars($texto_busca) ?>" style="flex: 1; padding: 8px;">
+                <button type="submit" class="btn">Buscar</button>
+                <a href="index.php" class="btn">Voltar</a>
+            </form>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Categoria:</label>
-            <select name="categoria" required>
-              <option value="">Selecione</option>
-              <option value="Cremoso">Cremoso</option>
-              <option value="Metalico">Metalico</option>
-              <option value="Glitter">Glitter</option>
-              <option value="Perolado">Perolado</option>
-              <option value="Fosco">Fosco</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Marca:</label>
-            <input type="text" name="categoria" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Estoque Mínimo:</label>
-            <input type="number" name="estoque_minimo" min="0" value="5" required>
-          </div>
-          <div class="form-group">
-            <label>Cores:</label>
-            <textarea name="cores" required></textarea>
-          </div>
-        </div>
-        <button type="submit" name="add" class="btn">Cadastrar</button>
-      </form>
-    </div>
 
-    <div style="text-align: center; margin-top: 15px;">
-      <a href="movimentacoes.php" class="btn">Movimentações</a>
+        <table>
+            <tr><th>Nome</th><th>Cores</th><th>Preço</th><th>Categoria</th><th>Marca</th><th>Estoque</th><th>Ações</th></tr>
+            <?php 
+            // Mostrar cada esmalte na tabela
+            while($esmalte = $resultado_esmaltes->fetch_assoc()): 
+                $esmalte_id = $esmalte['id'];
+                
+                // Calcular estoque atual desta esmalte
+                $sql_entradas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE esmalte_id = $esmalte_id AND tipo = 'entrada'";
+                $entradas = $conn->query($sql_entradas)->fetch_assoc();
+                $total_entradas = $entradas['total'] ? $entradas['total'] : 0;
+                
+                $sql_saidas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE esmalte_id = $esmalte_id AND tipo = 'saida'";
+                $saidas = $conn->query($sql_saidas)->fetch_assoc();
+                $total_saidas = $saidas['total'] ? $saidas['total'] : 0;
+                
+                $estoque_atual = $total_entradas - $total_saidas;
+                $estoque_minimo = $esmalte['estoque_minimo'];
+                
+                // Verificar se estoque está baixo
+                $estoque_baixo = $estoque_atual <= $estoque_minimo;
+            ?>
+                <tr class="<?= $estoque_baixo ? 'estoque-baixo' : 'estoque-ok' ?>">
+                    <td><span class="status-indicator <?= $estoque_baixo ? 'status-baixo' : 'status-ok' ?>"></span><?= htmlspecialchars($esmalte['nome']) ?></td>
+                    <td><?= htmlspecialchars($esmalte['cores']) ?></td>
+                    <td>R$ <?= number_format($esmalte['preco'], 2, ',', '.') ?></td>
+                    <td><?= htmlspecialchars($esmalte['categoria']) ?></td>
+                    <td><?= htmlspecialchars($esmalte['marca']) ?></td>
+                    <td><strong><?= $estoque_atual ?></strong>/<?= $estoque_minimo ?><?= $estoque_baixo ? '<br><small>⚠️ Baixo!</small>' : '' ?></td>
+                    <td>
+                        <a href="editar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;">Editar</a>
+                        <a href="deletar_esmlte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="return confirm('Excluir?')">Excluir</a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </table>
+
+        <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd;">
+            <h3>Adicionar Esmalte</h3>
+            <form method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preço:</label>
+                        <input type="number" name="preco" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Categoria:</label>
+                        <select name="categoria" required>
+                            <option value="">Selecione</option>
+                            <option value="Cremoso">Cremoso</option>
+                            <option value="Metalico">Metálico</option>
+                            <option value="Glitter">Glitter</option>
+                            <option value="Perolado">Perolado</option>
+                            <option value="Fosco">Fosco</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Marca:</label>
+                        <input type="text" name="marca" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Estoque Mínimo:</label>
+                        <input type="number" name="estoque_minimo" min="0" value="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cores:</label>
+                        <textarea name="cores" required></textarea>
+                    </div>
+                </div>
+                <button type="submit" name="add" class="btn">Cadastrar</button>
+            </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="movimentacoes.php" class="btn">Movimentações</a>
+        </div>
     </div>
-  </div>
 </body>
 </html>
-
-
-
-
 
