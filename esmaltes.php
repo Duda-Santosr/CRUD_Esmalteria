@@ -159,10 +159,10 @@ form textarea {
   border-radius: 12px;
   border: 2px solid #f8c8dc;
   font-size: 14px;
-  flex: 1 1 200px;
+  flex: 1 1 px;
   min-width: 200px;
   transition: 0.3s ease;
-  max-width: 100%;
+  max-width: 10%;
 }
 
 input:focus,
@@ -286,7 +286,7 @@ table tr:hover {
 }
 
 .form-group {
-  flex: 1 1 100px;
+  flex: 1 1 250px;
   display: flex;
   flex-direction: column;
   max-width: 100%;
