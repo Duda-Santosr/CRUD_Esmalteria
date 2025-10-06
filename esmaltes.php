@@ -102,57 +102,67 @@ $resultado_esmaltes = $conn->query($sql);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciar Catalogo - Studio D.I.Y</title>
   <style>
-    /* ===== RESET ===== */
-
+/* ======== RESET E BASE ======== */
 * {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
- font-family: 'Poppins', sans-serif;
- }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-/* ===== BODY ===== */
 body {
-background: linear-gradient(135deg, #f9d5e5, #fcd5ce, #f8c8dc);
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 20px;
-color: #444;
+  background: linear-gradient(135deg, #f9d5e5, #fcd5ce, #f8c8dc);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 15px;
+  color: #444;
+  overflow-x: hidden;
 }
 
-/* ===== CONTAINER ===== */
+/* ======== CONTAINER ======== */
 .container {
-background: #ffffffff;
-padding: 35px;
-border-radius: 20px;
-width: 100%;
-max-width: 1100px;
-box-shadow: 0 6px 20px rgba(255, 99, 162, 0.56);
-animation: fadeIn 0.8s ease-in-out;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 1100px;
+  box-shadow: 0 8px 25px rgba(214, 51, 108, 0.25);
+  animation: fadeIn 0.8s ease-in-out;
+  overflow: hidden;
 }
 
+/* ======== TÍTULO ======== */
 .container h1 {
-text-align: center;
-margin-bottom: 25px;
-color: #d6336c;
-font-weight: 700;
-letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #d6336c;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 2rem;
 }
 
-/* ===== FORMULÁRIOS ===== */
+/* ======== FORMULÁRIOS ======== */
 form {
-display: flex;
-gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-form input, form select, form textarea {
-padding: 10px;
-border-radius: 12px;
-border: 2px solid #f8c8dc;
-flex: 1;
-font-size: 14px;
+form input,
+form select,
+form textarea {
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid #f8c8dc;
+  font-size: 14px;
+  flex: 1 1 200px;
+  min-width: 200px;
+  transition: 0.3s ease;
+  max-width: 100%;
 }
 
 input:focus,
@@ -160,36 +170,61 @@ select:focus,
 textarea:focus {
   border-color: #d6336c;
   box-shadow: 0 0 8px rgba(214, 51, 108, 0.4);
-  outline: none; /* remove o contorno padrão do navegador */
+  outline: none;
 }
 
-
-form button, .btn {
-padding: 10px 20px;
-background: linear-gradient(135deg, #d6336c, #f0569bff);
-color: #fff;
-border: none;
-border-radius: 10px;
-font-weight: bold;
-cursor: pointer;
-transition: 0.3s ease;
-text-decoration: none;
+/* ======== BOTÕES ======== */
+form button,
+.btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #d6336c, #f0569b);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+  min-width: 150px;
+  max-width: 100%;
 }
 
-form button:hover, .btn:hover {
-background: linear-gradient(135deg, #b81e53, #fc4999ff);
-transform: scale(1.05);
-box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
+form button:hover,
+.btn:hover {
+  background: linear-gradient(135deg, #b81e53, #fc4999);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(214, 51, 108, 0.4);
 }
 
-/* ===== TABELAS ===== */
+/* ======== ALERTAS ======== */
+.alert {
+  padding: 12px 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.alert.success {
+  background: #e6f4ea;
+  border-left: 5px solid #4caf50;
+  color: #2e7d32;
+}
+
+.alert.error {
+  background: #fdecea;
+  border-left: 5px solid #e53935;
+  color: #c62828;
+}
+
+/* ======== TABELA ======== */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 table th {
@@ -204,6 +239,7 @@ table td {
   padding: 10px;
   border-bottom: 1px solid #f1b6c9;
   font-size: 14px;
+  vertical-align: middle;
 }
 
 table tr:nth-child(even) {
@@ -213,66 +249,122 @@ table tr:nth-child(even) {
 table tr:hover {
   background: #f8c8dc;
 }
+
+/* ======== ESTOQUE ======== */
 .estoque-ok {
-background: #f1f8e9;
+  background: #f1f8e9;
 }
 
 .estoque-baixo {
-background: #ffebee;
+  background: #ffebee;
 }
 
 .status-indicator {
-display: inline-block;
-width: 10px;
-height: 10px;
-border-radius: 50%;
-margin-right: 6px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
 }
 
 .status-ok {
-background: #4caf50;
+  background: #4caf50;
 }
 
 .status-baixo {
-background: #e53935;
+  background: #e53935;
 }
 
-/* ===== FORMULÁRIO DE CADASTRO ===== */
+/* ======== FORM DE CADASTRO ======== */
 .form-row {
-display: flex;
-gap: 15px;
-margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
 .form-group {
-flex: 1;
-display: flex;
-flex-direction: column;
+  flex: 1 1 100px;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
 }
 
 .form-group label {
-margin-bottom: 5px;
-font-weight: 600;
-color: #555;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #555;
 }
 
-/* ===== ANIMAÇÃO ===== */
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* ======== ANIMAÇÕES ======== */
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(-15px); }
-to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 768px) {
-.form-row {
-flex-direction: column;
+/* ======== RESPONSIVIDADE ======== */
+@media (max-width: 900px) {
+  .container {
+    padding: 30px 20px;
+  }
+
+  .container h1 {
+    font-size: 1.6rem;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .btn,
+  form button {
+    width: 100%;
+  }
+
+  table td,
+  table th {
+    font-size: 13px;
+    padding: 8px;
+  }
 }
-table {
-font-size: 13px;
-}
-form {
-flex-direction: column;
-}
+
+@media (max-width: 500px) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .form-group label {
+    font-size: 0.9em;
+  }
+
+  form input,
+  form select,
+  form textarea {
+    font-size: 13px;
+  }
 }
 
   </style>
