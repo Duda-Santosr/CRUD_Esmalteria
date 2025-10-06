@@ -4,41 +4,93 @@ session_start();
 
 // Se não está logado, vai para o login
 if (!isset($_SESSION['usuario'])) { 
-  header('Location: login.php'); 
-  exit(); 
+    header('Location: login.php'); 
+    exit(); 
 }
 
 // Conectar no banco
 include 'config.php';
 include 'funcoes_estoque.php';
 
+// Fallback para app_log caso não esteja definido em config.php
+if (!function_exists('app_log')) {
+    function app_log($message) {
+        $date = date('Y-m-d H:i:s');
+        $line = "[$date] " . (is_string($message) ? $message : json_encode($message, JSON_UNESCAPED_UNICODE)) . PHP_EOL;
+        error_log('[esmalteria] ' . $line);
+    }
+}
+
 // Pegar o que o usuário digitou na busca
 $texto_busca = $_GET['busca'] ?? '';
 
 // Se o usuário clicou em "Cadastrar"
-if ($_POST['add'] ?? false) {
-  $nome_esmalte = $_POST['nome'];
-  $cores_esmalte = $_POST['cores'];
-  $preco_esmalte = $_POST['preco'];
-  $categorias_esmalte = $_POST['categorias'];
-  $marcas_esmalte = $_POST['marca'];
-  $estoque_minimo_esmalte = $_POST['estoque_minimo'];
-  
-  // Inserir nova pizza no banco
-  $sql = "INSERT INTO pizzas (nome, cores, preco, categorias, marcas, estoque_minimo) 
-      VALUES ('$nome_pizza', '$cores_pizza', $preco_pizza, '$categorias_pizza', '$marcas_pizza', $estoque_minimo_pizza)";
-  $conn->query($sql);
-  
-  // Voltar para a mesma página
-  header("Location: esmaltes.php");
-  exit();
+if (isset($_POST['add'])) {
+    app_log(['route' => 'esmaltes_add', 'post' => $_POST]);
+    $nome_esmalte = trim($_POST['nome'] ?? '');
+    $cores_esmalte = trim($_POST['cores'] ?? '');
+    $preco_esmalte = str_replace(',', '.', trim($_POST['preco'] ?? '0'));
+    $categoria_esmalte = trim($_POST['categoria'] ?? '');
+    $marca_esmalte = trim($_POST['marca'] ?? '');
+    $estoque_minimo_esmalte = trim($_POST['estoque_minimo'] ?? '0');
+
+    $erros = array();
+    if ($nome_esmalte === '') { $erros[] = 'Informe o nome.'; }
+    if ($cores_esmalte === '') { $erros[] = 'Informe as cores.'; }
+    if ($categoria_esmalte === '') { $erros[] = 'Informe a categoria.'; }
+    if ($marca_esmalte === '') { $erros[] = 'Informe a marca.'; }
+
+    if (!is_numeric($preco_esmalte)) { $erros[] = 'Preço inválido.'; }
+    if (!ctype_digit((string)$estoque_minimo_esmalte)) { $erros[] = 'Estoque mínimo inválido.'; }
+
+    // Normalizar categoria para os valores aceitos no ENUM
+    $map_categoria = array(
+        'Cremoso' => 'Cremoso',
+        'Metálico' => 'Metalico',
+        'Glitter' => 'Glitter',
+        'Perolado' => 'Perolado',
+        'Fosco' => 'Fosco',
+    );
+    if (isset($map_categoria[$categoria_esmalte])) {
+        $categoria_esmalte = $map_categoria[$categoria_esmalte];
+    }
+    if (!in_array($categoria_esmalte, array('Cremoso', 'Metalico', 'Glitter', 'Perolado', 'Fosco'), true)) {
+        $erros[] = 'Categoria inválida.';
+    }
+
+    if (empty($erros)) {
+        $preco = (float)$preco_esmalte;
+        $estoque_min = (int)$estoque_minimo_esmalte;
+
+        $stmt = $conn->prepare("INSERT INTO esmaltes (nome, cores, preco, categoria, marca, estoque_minimo, ativo) VALUES (?, ?, ?, ?, ?, ?, 1)");
+        if ($stmt) {
+            $stmt->bind_param('ssdssi', $nome_esmalte, $cores_esmalte, $preco, $categoria_esmalte, $marca_esmalte, $estoque_min);
+            if ($stmt->execute()) {
+                $_SESSION['flash_success'] = 'Esmalte cadastrado com sucesso.';
+                app_log(['route' => 'esmaltes_add', 'status' => 'ok', 'insert_id' => $conn->insert_id]);
+            } else {
+                $_SESSION['flash_error'] = 'Erro ao cadastrar esmalte: ' . $stmt->error;
+                app_log(['route' => 'esmaltes_add', 'status' => 'fail', 'error' => $stmt->error]);
+            }
+            $stmt->close();
+        } else {
+            $_SESSION['flash_error'] = 'Erro ao preparar inserção: ' . $conn->error;
+            app_log(['route' => 'esmaltes_add', 'status' => 'prepare_fail', 'error' => $conn->error]);
+        }
+    } else {
+        $_SESSION['flash_error'] = implode(' ', $erros);
+        app_log(['route' => 'esmaltes_add', 'status' => 'validation_fail', 'errors' => $erros]);
+    }
+
+    header("Location: esmaltes.php");
+    exit();
 }
 
-// Buscar pizzas no banco
+// Buscar esmaltes no banco
 if ($texto_busca) {
-  $sql = "SELECT * FROM esmaltes WHERE nome LIKE '%$texto_busca%' OR cores LIKE '%$texto_busca%' ORDER BY nome";
+    $sql = "SELECT * FROM esmaltes WHERE nome LIKE '%$texto_busca%' OR cores LIKE '%$texto_busca%' ORDER BY nome";
 } else {
-  $sql = "SELECT * FROM esmaltes ORDER BY nome";
+    $sql = "SELECT * FROM esmaltes ORDER BY nome";
 }
 $resultado_esmaltes = $conn->query($sql);
 ?>
@@ -239,16 +291,16 @@ flex-direction: column;
     <table>
       <tr><th>Nome</th><th>Cores</th><th>Preço</th><th>Categoria</th><th>Marca</th><th>Estoque</th><th>Ações</th></tr>
       <?php 
-      // Mostrar cada pizza na tabela
+      // Mostrar cada esmalte na tabela
       while($esmalte = $resultado_esmlates->fetch_assoc()): 
         $esmalte_id = $esmalte['id'];
         
-        // Calcular estoque atual desta pizza
-        $sql_entradas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE pizza_id = $esmalte_id AND tipo = 'entrada'";
+        // Calcular estoque atual desta esmalte
+        $sql_entradas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE esmalte_id = $esmalte_id AND tipo = 'entrada'";
         $entradas = $conn->query($sql_entradas)->fetch_assoc();
         $total_entradas = $entradas['total'] ? $entradas['total'] : 0;
         
-        $sql_saidas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE pizza_id = $esmalte_id AND tipo = 'saida'";
+        $sql_saidas = "SELECT SUM(quantidade) as total FROM movimentacoes WHERE esmalte_id = $esmalte_id AND tipo = 'saida'";
         $saidas = $conn->query($sql_saidas)->fetch_assoc();
         $total_saidas = $saidas['total'] ? $saidas['total'] : 0;
         
@@ -260,14 +312,14 @@ flex-direction: column;
       ?>
         <tr class="<?= $estoque_baixo ? 'estoque-baixo' : 'estoque-ok' ?>">
           <td><span class="status-indicator <?= $estoque_baixo ? 'status-baixo' : 'status-ok' ?>"></span><?= htmlspecialchars($esmalte['nome']) ?></td>
-          <td><?= htmlspecialchars($esmalte['ingredientes']) ?></td>
+          <td><?= htmlspecialchars($esmalte['cores']) ?></td>
           <td>R$ <?= number_format($esmalte['preco'], 2, ',', '.') ?></td>
-          <td><?= htmlspecialchars($esmalte['tamanho']) ?></td>
           <td><?= htmlspecialchars($esmalte['categoria']) ?></td>
+          <td><?= htmlspecialchars($esmalte['marca']) ?></td>
           <td><strong><?= $estoque_atual ?></strong>/<?= $estoque_minimo ?><?= $estoque_baixo ? '<br><small>⚠️ Baixo!</small>' : '' ?></td>
           <td>
-            <a href="editar_pizza.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;">Editar</a>
-            <a href="deletar_pizza.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="return confirm('Excluir?')">Excluir</a>
+            <a href="editar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;">Editar</a>
+            <a href="deletar_esmalte.php?id=<?= $esmalte['id'] ?>" class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="return confirm('Excluir?')">Excluir</a>
           </td>
         </tr>
       <?php endwhile; ?>
@@ -289,7 +341,7 @@ flex-direction: column;
         <div class="form-row">
           <div class="form-group">
             <label>Categoria:</label>
-            <select name="tamanho" required>
+            <select name="categoria" required>
               <option value="">Selecione</option>
               <option value="Cremoso">Cremoso</option>
               <option value="Metalico">Metalico</option>
@@ -310,7 +362,7 @@ flex-direction: column;
           </div>
           <div class="form-group">
             <label>Cores:</label>
-            <textarea name="ingredientes" required></textarea>
+            <textarea name="cores" required></textarea>
           </div>
         </div>
         <button type="submit" name="add" class="btn">Cadastrar</button>
