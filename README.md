@@ -48,7 +48,7 @@ O sistema também conta com uma tela de login, garantindo que apenas usuários a
 #### 1️⃣ Clonar o repositório
 
 ```bash
-git clone https://github.com/Isa-Paiola/CRUD_Esmalteria.git
+https://github.com/Duda-Santosr/CRUD_Esmalteria
 ```
 
 #### 2️⃣ Mover o projeto para o diretório do servidor
